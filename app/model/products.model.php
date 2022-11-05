@@ -18,9 +18,23 @@ class productsModel{
         $products = $query->fetchAll(PDO::FETCH_OBJ);
         return $products;
     }
+    
+    function getAllPaginate($start,$cantPages){
+        $query = $this->db->prepare("SELECT * FROM products LIMIT $start,$cantPages");
+        $query->execute();
+        $products = $query->fetchAll(PDO::FETCH_OBJ);
+        return $products;
+    }
 
-    function filter($params,$order){
-        $query = $this->db->prepare("SELECT * FROM `products` ORDER BY `products`.`$params` $order");
+    function quantityProducts(){
+        $query = $this->db->prepare("SELECT * FROM products");
+        $query->execute();
+        $quantity=$query->rowCount();
+        return $quantity;
+    }
+    
+    function orderByColumn($column,$order){
+        $query = $this->db->prepare("SELECT * FROM `products` ORDER BY `products`.`$column` $order");
         $query->execute();
         $products = $query->fetchAll(PDO::FETCH_OBJ);
         return $products;
