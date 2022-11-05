@@ -1,6 +1,5 @@
+#filtros
 http://localhost/web2/API-TPE/api/products
-
-#filtros:
 
 http://localhost/web2/API-TPE/api/products?column=name&order=a
 
