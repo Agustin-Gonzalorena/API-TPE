@@ -42,31 +42,32 @@ agregar nuevos o filtrar.
 
     Se debera enviar los datos de TODOS los campos de la tabla.
 
+
 ## Filtros
-### Paginacion:
-Para paginar use las variables GET "page" y "size" de la siguiente manera:
+- ### Paginacion:
+    Para paginar use las variables GET "page" y "size" de la siguiente manera:
 
-    /API-TPE/api/products?page=1&size=5
+        /API-TPE/api/products?page=1&size=5
 
-La variable "page" hace referencia a la pagina de inicio.
+    La variable "page" hace referencia a la pagina de inicio.
 
-La variable "size" hace referencia a la cantidad de paginas que quiere mostrar.
+    La variable "size" hace referencia a la cantidad de paginas que quiere mostrar.
 
-Si "size" supera la cantidad maxima de productos, se mostraran todos.
+    Si "size" supera la cantidad maxima de productos, se mostraran todos.
 
-### Por productos:
-Para filtar por producto utilize la variable "filter" de la siguiente manera:
+- ### Por productos:
+    Para filtar por producto utilize la variable "filter" de la siguiente manera:
 
-    /API-TPE/api/products?filter=remeras
+        /API-TPE/api/products?filter=remeras
 
-En este ejemplo le obtendra todas las remeras.
+    En este ejemplo le obtendra todas las remeras.
 
-### Por campos de la tabla y en orden ascendente o descendente:
-Para ordenar por campo utilize la variable "column" y asigne el nombre del campo,
-tambien se debera utilizar la variable "order" para indicar si se quiere ordenar de forma ascendente o descendente:
+- ### Por campos de la tabla y en orden ascendente o descendente:
+    Para ordenar por campo utilize la variable "column" y asigne el nombre del campo,
+    tambien se debera utilizar la variable "order" para indicar si se quiere ordenar de forma ascendente o descendente:
 
-    /API-TPE/api/products?column=name&order=a
+        /API-TPE/api/products?column=name&order=a
 
-Si "order" toma el valor de "a" se ordenara de forma ascendente.
+    Si "order" toma el valor de "a" se ordenara de forma ascendente.
 
-Y Si "order" toma el valor de "d" se ordenara de forma descendente.
+    Y Si "order" toma el valor de "d" se ordenara de forma descendente.
