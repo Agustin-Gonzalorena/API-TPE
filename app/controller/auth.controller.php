@@ -44,9 +44,9 @@ class authController{
             );
             $payload = array(
                 'id' => $user->id,
-                'name' => $user->name,
+                'userName' => $user->userName,
                 'admin'=>$user->admin,
-                'exp' => time()+3600
+                'exp' => time()+1800 //expira en media hora
             );
 
             $header = $this->base64url_encode(json_encode($header));

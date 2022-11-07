@@ -40,7 +40,7 @@ class productsModel{
         return $products;
     }
 
-    function get($id){
+    function getById($id){
         $query=$this->db->prepare("SELECT* FROM products WHERE id=?");
         $query->execute([$id]);
         $product=$query->fetch(PDO::FETCH_OBJ);

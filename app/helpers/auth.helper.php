@@ -14,10 +14,11 @@ class authHelper{
     }
     function checkLoggedIn(){
         $payload = $this->getToken();
-        if(isset($payload->id))
-            return true;
-        else
-            return false;
+        if(!isset($payload->id)){
+            $this->view->response("Tiene que estar logeado", 401);
+            die();
+        }
+        return $payload->userName;
     }
 
     function getToken(){

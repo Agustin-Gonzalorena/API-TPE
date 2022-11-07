@@ -28,7 +28,7 @@ class productsController{
 
         }elseif(count($_GET)==2){
             if(empty($_GET['filter'])){
-                $this->view->response("Parametro GET incorrecto", 404);
+                $this->view->response("Parametro GET incorrecto", 400);
             }else{
                 $column=$_GET['filter'];
                 $products=$this->filterByProduct($column);
@@ -38,7 +38,7 @@ class productsController{
         }elseif(count($_GET)==3){
             if(isset($_GET['column']) && isset($_GET['order'])){
                 if(empty($_GET['order'])||empty($_GET['column'])){
-                    $this->view->response("Al parametro GET le falta la variable order o column", 404);
+                    $this->view->response("Al parametro GET le falta la variable order o column", 400);
                 }else{
                     $column=$_GET['column'];
                     $column=$this->checkParamColumn($column);
@@ -57,10 +57,10 @@ class productsController{
                 $this->view->response($products);    
 
             }else{
-                $this->view->response("Parametro GET desconocido", 404);
+                $this->view->response("Parametro GET desconocido", 400);
             }
         }else{
-            $this->view->response("Parametro GET desconocido", 404);
+            $this->view->response("Parametro GET desconocido", 400);
         }
     }
 
@@ -80,16 +80,16 @@ class productsController{
                 if($product->id_types==7 || $product->id_types==8)
                     array_push($array,$product);
         }else{
-            $this->view->response("El producto=($column) no existe", 404);
+            $this->view->response("El tipo de producto=($column) no existe", 404);
             exit();
         }
         return $array; 
     }
     private function checkPaginate($page,$size){
         if(!is_integer($page) && $page<=0)
-            $this->view->response("El parametro (page) debe ser numero positivo", 404);
+            $this->view->response("El parametro (page) debe ser numero positivo", 400);
         if(!is_integer($size) && $size<=0)
-            $this->view->response("El parametro (size) debe ser numero positivo", 404);
+            $this->view->response("El parametro (size) debe ser numero positivo", 400);
 
         $quantity=$this->model->quantityProducts();
         if($page>=$quantity){
@@ -113,26 +113,26 @@ class productsController{
             return $order;
         }else{
             $error=$order;
-            $this->view->response("El parametro de orden=($error) no existe",404);
+            $this->view->response("El parametro de orden=($error) es incorrecto",400);
             exit();
         }
     }
 
     function getById($params=null){
         $id = $params[':ID'];
-            $product = $this->model->get($id);
+        $product = $this->model->getById($id);
 
-            if ($product)
-                $this->view->response($product);
-            else 
-                $this->view->response("El producto con el id=$id no existe", 404);
+        if($product)
+            $this->view->response($product);
+        else 
+            $this->view->response("El producto con el id=$id no existe", 404);
     }
     
     function delete($params=null){
         $id=$params[':ID'];
         $this->authHelper->checkAdmin();
             
-        $product = $this->model->get($id);
+        $product = $this->model->getById($id);
 
         if($product){
             $this->model->delete($id);
@@ -147,51 +147,51 @@ class productsController{
         $product = $this->getData();
 
         if (empty($product->name) || empty($product->description) || empty($product->image) || empty($product->price) || empty($product->stock) || empty($product->id_types)) {
-            $this->view->response("Complete los datos", 400);
+            $this->view->response("Complete TODOS los datos(name,description,image,price,stock,id_types)", 400);
         } else {
             $id = $this->model->insert($product->name, $product->description, $product->image,$product->price,$product->stock,$product->id_types);
-            $product = $this->model->get($id);
+            $product = $this->model->getById($id);
             $this->view->response($product, 201);
         }
     }
     function update($params=null){
         $this->authHelper->checkAdmin();
         $idProduct=$params[':ID'];
-        $product = $this->model->get($idProduct);
+
+        $products=$this->model->getAll();
+        $valor=array_search($idProduct, array_column($products, 'id'));
+        if(!is_integer($valor)){
+            $this->view->response("El producto con id=($idProduct) no existe",404);
+            die();
+        }
+
+        $product = $this->model->getById($idProduct);
         $newProduct = $this->getData();
-        $array=array();
-        if(empty($newProduct->name))
-            array_push($array,$product->name);
-        else
-            array_push($array,$newProduct->name);
-
-        if(empty($newProduct->description))
-            array_push($array,$product->description);
-        else
-            array_push($array,$newProduct->description);
-        
-        if(empty($newProduct->image))
-            array_push($array,$product->image);
-        else
-            array_push($array,$newProduct->image);
-
-        if(empty($newProduct->price))
-            array_push($array,$product->price);
-        else
-            array_push($array,$newProduct->price);
-        
-        if(empty($newProduct->stock))
-            array_push($array,$product->stock);
-        else
-            array_push($array,$newProduct->stock);
-        
-        if(empty($newProduct->id_types))
-            array_push($array,$product->id_types);
-        else
-            array_push($array,$newProduct->id_types);
-        
-        $this->model->update($array[0],$array[1],$array[2],$array[3],$array[4],$array[5],$idProduct);
-        $product = $this->model->get($idProduct);
+        if(empty($newProduct)){
+            $this->view->response("No se recibio ningun campo a modificar",400);
+            die();
+        }
+        if(isset($newProduct->name)){
+            $product->name=$newProduct->name;
+        }
+        if(isset($newProduct->description)){
+            $product->description=$newProduct->description;
+        }
+        if(isset($newProduct->image)){
+            $product->image=$newProduct->image;
+        }
+        if(isset($newProduct->price)){
+            $product->price=$newProduct->price;
+        }
+        if(isset($newProduct->stock)){
+            $product->stock=$newProduct->stock;
+        }
+        if(isset($newProduct->id_types)){
+            $product->id_types=$newProduct->id_types;
+        }
+        $this->model->update($product->name,$product->description,$product->image,$product->price,$product->stock,$product->id_types,$idProduct);
+        $product = $this->model->getById($idProduct);
         $this->view->response($product, 201);
+        
     }
 }
