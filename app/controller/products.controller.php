@@ -13,8 +13,7 @@ class productsController{
         $this->model = new productsModel();
         $this->view = new apiView();
         $this->authHelper=new authHelper();
-        // lee el body del request
-        $this->data = file_get_contents("php://input");
+        $this->data = file_get_contents("php://input");// lee el body del request
     }
 
     private function getData() {
@@ -44,7 +43,6 @@ class productsController{
                     $column=$this->checkParamColumn($column);
                     $order=$_GET['order'];
                     $order=$this->checkParamOrder($order);
-
                     $products=$this->model->orderByColumn($column,$order);
                     $this->view->response($products);
                 }
@@ -67,18 +65,22 @@ class productsController{
     private function filterByProduct($column){
         $products=$this->model->getAll();
         $array=array();
+
         if($column=='remeras'){
             foreach($products as $product)
                 if($product->id_types==1 || $product->id_types==2 || $product->id_types==3)
                     array_push($array,$product);
+
         }elseif($column=='buzos'){
             foreach($products as $product)
                 if($product->id_types==4 || $product->id_types==5 || $product->id_types==6)
                     array_push($array,$product);
+
         }elseif($column=='camperas'){
             foreach($products as $product)
                 if($product->id_types==7 || $product->id_types==8)
                     array_push($array,$product);
+
         }else{
             $this->view->response("El tipo de producto=($column) no existe", 404);
             exit();
@@ -88,6 +90,7 @@ class productsController{
     private function checkPaginate($page,$size){
         if(!is_integer($page) && $page<=0)
             $this->view->response("El parametro (page) debe ser numero positivo", 400);
+
         if(!is_integer($size) && $size<=0)
             $this->view->response("El parametro (size) debe ser numero positivo", 400);
 
@@ -121,7 +124,6 @@ class productsController{
     function getById($params=null){
         $id = $params[':ID'];
         $product = $this->model->getById($id);
-
         if($product)
             $this->view->response($product);
         else 
@@ -129,11 +131,9 @@ class productsController{
     }
     
     function delete($params=null){
-        $id=$params[':ID'];
         $this->authHelper->checkAdmin();
-            
+        $id=$params[':ID'];        
         $product = $this->model->getById($id);
-
         if($product){
             $this->model->delete($id);
             $this->view->response($product);
@@ -145,7 +145,6 @@ class productsController{
     function insert($params=null){
         $this->authHelper->checkAdmin();
         $product = $this->getData();
-
         if (empty($product->name) || empty($product->description) || empty($product->image) || empty($product->price) || empty($product->stock) || empty($product->id_types)) {
             $this->view->response("Complete TODOS los datos(name,description,image,price,stock,id_types)", 400);
         } else {
@@ -154,17 +153,16 @@ class productsController{
             $this->view->response($product, 201);
         }
     }
+
     function update($params=null){
         $this->authHelper->checkAdmin();
         $idProduct=$params[':ID'];
-
         $products=$this->model->getAll();
         $valor=array_search($idProduct, array_column($products, 'id'));
         if(!is_integer($valor)){
             $this->view->response("El producto con id=($idProduct) no existe",404);
             die();
         }
-
         $product = $this->model->getById($idProduct);
         $newProduct = $this->getData();
         if(empty($newProduct)){
@@ -192,6 +190,5 @@ class productsController{
         $this->model->update($product->name,$product->description,$product->image,$product->price,$product->stock,$product->id_types,$idProduct);
         $product = $this->model->getById($idProduct);
         $this->view->response($product, 201);
-        
     }
 }

@@ -30,24 +30,4 @@ class usersModel {
         $query->execute([$id]);
         return $query->fetch(PDO::FETCH_OBJ);
     }
-    
-    function add($name,$lastName,$userName,$password){
-        $query = $this->db->prepare("INSERT INTO users (`name`, `lastName`,`userName`,`password`, `admin`) VALUES (?, ?, ?, ?, ?)");
-        $query->execute([$name,$lastName,$userName,$password,false]);
-    }
-
-    function updateAdmin($id,$value){
-        $query=$this->db->prepare("UPDATE users SET `admin`=? WHERE id=? ");
-        $query->execute([$value,$id]);
-    }
-
-    function delete($id){
-        $query = $this->db->prepare('DELETE FROM users WHERE id = ?');
-        $query->execute([$id]);
-    }
-
-    function changePassword($password,$id){
-        $query=$this->db->prepare("UPDATE users SET `password`=? WHERE id=? ");
-        $query->execute([$password,$id]);
-    }
 }

@@ -64,8 +64,6 @@ class commentsController{
             $this->view->response($comment);
         else 
             $this->view->response("El comentario con el id=$id no existe", 404);
-        
-
     }
 
     function insert($param=null){
@@ -89,7 +87,5 @@ class commentsController{
         }else{
             $this->view->response("El producto con el id=($data->id_product), que quiere comentar no existe",404);
         }
-        
-          
     }
 }

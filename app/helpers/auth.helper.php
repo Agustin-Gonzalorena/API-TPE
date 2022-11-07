@@ -1,10 +1,13 @@
 <?php
 require_once './app/view/api.view.php';
+
 class authHelper{
     private $view;
+
     function __construct(){
         $this->view=new apiView;
     }
+
     function checkAdmin(){
         $payload=$this->getToken();
         if(!isset($payload->id) || $payload->admin!=1){
@@ -12,6 +15,7 @@ class authHelper{
             die();
         }
     }
+
     function checkLoggedIn(){
         $payload = $this->getToken();
         if(!isset($payload->id)){
@@ -53,6 +57,7 @@ class authHelper{
             $header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
         return $header;
     }
+    
     function base64url_encode($data) {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }

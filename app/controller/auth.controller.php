@@ -15,8 +15,7 @@ class authController{
     }
 
     function getToken(){
-        // Obtener "Basic base64(user:pass)
-        $basic = $this->authHelper->getHeader();
+        $basic = $this->authHelper->getHeader(); // Obtener "Basic base64(user:pass)
 
         if(empty($basic)){
             $this->view->response('No autorizado', 401);
@@ -55,11 +54,12 @@ class authController{
             $signature = hash_hmac('SHA256', "$header.$payload", "1234", true);
             $signature = $this->base64url_encode($signature);
             $token = "$header.$payload.$signature";
-             $this->view->response($token);
+            $this->view->response($token);
         }else{
             $this->view->response('No autorizado', 401);
         }
     }
+    
     function base64url_encode($data) {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
