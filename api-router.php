@@ -18,5 +18,6 @@ $router->addRoute('comments','POST','commentsController','insert');
 
 $router->addRoute('auth','GET','authController','getToken');
 
+$router->setDefaultRoute('productsController','errorEndpoint');//es necesario un controlador nuevo?
 
 $router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);

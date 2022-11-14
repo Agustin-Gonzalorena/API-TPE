@@ -33,7 +33,6 @@ class productsController{
                 $products=$this->filterByProduct($column);
                 $this->view->response($products);  
             }
-
         }elseif(count($_GET)==3){
             if(isset($_GET['column']) && isset($_GET['order'])){
                 if(empty($_GET['order'])||empty($_GET['column'])){
@@ -46,7 +45,6 @@ class productsController{
                     $products=$this->model->orderByColumn($column,$order);
                     $this->view->response($products);
                 }
-
             }elseif(isset($_GET['page']) && isset($_GET['size'])){
                 $page=$_GET['page'];
                 $size=$_GET['size'];
@@ -190,5 +188,10 @@ class productsController{
         $this->model->update($product->name,$product->description,$product->image,$product->price,$product->stock,$product->id_types,$idProduct);
         $product = $this->model->getById($idProduct);
         $this->view->response($product, 201);
+    }
+
+
+    function errorEndpoint(){
+        $this->view->response("Endpoint incorrecto",404);
     }
 }
