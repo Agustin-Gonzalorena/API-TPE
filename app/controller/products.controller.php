@@ -49,7 +49,7 @@ class productsController{
                 $page=$_GET['page'];
                 $size=$_GET['size'];
                 $this->checkPaginate($page,$size);
-                $products=$this->model->getAllPaginate($page,$size);
+                $products=$this->model->getAllPaginate($page-1,$size);
                 $this->view->response($products);    
 
             }else{
@@ -86,12 +86,15 @@ class productsController{
         return $array; 
     }
     private function checkPaginate($page,$size){
-        if(!is_integer($page) && $page<=0)
+        if(!is_integer($page) && $page<=0){
             $this->view->response("El parametro (page) debe ser numero positivo", 400);
-
-        if(!is_integer($size) && $size<=0)
+            exit();
+        }
+        if(!is_integer($size) && $size<=0){
             $this->view->response("El parametro (size) debe ser numero positivo", 400);
-
+            exit();
+        }
+            
         $quantity=$this->model->quantityProducts();
         if($page>=$quantity){
             $this->view->response("La pagina ($page) no existe", 404);
